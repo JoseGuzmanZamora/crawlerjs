@@ -1,0 +1,121 @@
+<div class="source"><pre><span></span><span class="kr">const</span> <span class="nx">program</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;commander&#39;</span><span class="p">)</span>
+<span class="kr">const</span> <span class="nx">https</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;https&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">download</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;image-downloader&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">clear</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;clear&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">figlet</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;figlet&#39;</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">spin</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;clui&#39;</span><span class="p">).</span><span class="nx">Spinner</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">status</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">spin</span><span class="p">(</span><span class="s1">&#39;Connecting to Reddit . . .&#39;</span><span class="p">);</span>
+
+<span class="nx">program</span>
+  <span class="p">.</span><span class="nx">version</span><span class="p">(</span><span class="s1">&#39;1.2.1&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">description</span><span class="p">(</span><span class="s1">&#39; - Reddit cli - WATCH MEMES AT WORK, just pretend you are coding!&#39;</span><span class="p">)</span>
+
+<span class="nx">program</span>
+  <span class="p">.</span><span class="nx">command</span><span class="p">(</span><span class="s1">&#39;trending&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">description</span><span class="p">(</span><span class="s1">&#39;Exposes the 5 most popular subreddits in the internet.&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">action</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">status</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+    <span class="nx">https</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;https://www.reddit.com/r/Trending/.json&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">respuesta</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">respuesta</span> <span class="o">+=</span> <span class="nx">chunk</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>
+      <span class="p">})</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">status</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+        <span class="nx">clear</span><span class="p">()</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">figlet</span><span class="p">.</span><span class="nx">textSync</span><span class="p">(</span><span class="s1">&#39;Trending&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">horizontalLayout</span><span class="o">:</span> <span class="s1">&#39;full&#39;</span> <span class="p">}))</span>
+        <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">respuesta</span><span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;children&#39;</span><span class="p">][</span><span class="nx">i</span><span class="p">.</span><span class="nx">toString</span><span class="p">()][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;     &#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">respuesta</span><span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;children&#39;</span><span class="p">][</span><span class="nx">i</span><span class="p">.</span><span class="nx">toString</span><span class="p">()][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">])</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">status</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+        <span class="nx">Console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;ERROR BUU :(&quot;</span><span class="p">)</span>
+        <span class="nx">Console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+      <span class="p">})</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="nx">program</span>
+  <span class="p">.</span><span class="nx">command</span><span class="p">(</span><span class="s1">&#39;show &lt;subreddit&gt;&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">option</span><span class="p">(</span><span class="s1">&#39;-s --sort &lt;order&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;Choose sorting order&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">description</span><span class="p">(</span><span class="s1">&#39;Exposes and downloads the first meme in the subreddit.&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">action</span><span class="p">((</span><span class="nx">subreddit</span><span class="p">,</span> <span class="nx">cmd</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">status</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span> <span class="o">==</span> <span class="s2">&quot;top&quot;</span> <span class="o">||</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span> <span class="o">==</span> <span class="s2">&quot;new&quot;</span> <span class="o">||</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span> <span class="o">==</span> <span class="s2">&quot;rising&quot;</span> <span class="o">||</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span> <span class="o">==</span> <span class="s2">&quot;controversial&quot;</span><span class="p">)){</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Sorting by &quot;</span> <span class="o">+</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span><span class="p">)</span>
+      <span class="kd">var</span> <span class="nx">link</span> <span class="o">=</span> <span class="s1">&#39;https://www.reddit.com/r/&#39;</span> <span class="o">+</span> <span class="nx">subreddit</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="o">+</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="o">+</span><span class="s1">&#39;/.json&#39;</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Sorting by top&quot;</span><span class="p">)</span>
+      <span class="kd">var</span> <span class="nx">link</span> <span class="o">=</span> <span class="s1">&#39;https://www.reddit.com/r/&#39;</span> <span class="o">+</span> <span class="nx">subreddit</span> <span class="o">+</span> <span class="s1">&#39;/top/.json&#39;</span>
+    <span class="p">}</span>
+    <span class="nx">https</span><span class="p">.</span><span class="nx">get</span><span class="p">((</span><span class="nx">link</span><span class="p">),</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">respuesta</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">respuesta</span> <span class="o">+=</span> <span class="nx">chunk</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>
+      <span class="p">})</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">status</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">respuesta</span><span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;children&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;     &#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">respuesta</span><span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;children&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">])</span>
+        <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="nx">url</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">respuesta</span><span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;children&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
+          <span class="nx">dest</span><span class="o">:</span> <span class="s1">&#39;./&#39;</span>
+        <span class="p">}</span>
+        <span class="nx">download</span><span class="p">.</span><span class="nx">image</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+      <span class="p">})</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">status</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+        <span class="nx">Console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;ERROR BUU :(&quot;</span><span class="p">)</span>
+        <span class="nx">Console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+      <span class="p">})</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+  <span class="nx">program</span>
+  <span class="p">.</span><span class="nx">command</span><span class="p">(</span><span class="s1">&#39;makemelaugh &lt;amount&gt;&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">option</span><span class="p">(</span><span class="s1">&#39;-s --sort &lt;order&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;Choose sorting order&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">description</span><span class="p">(</span><span class="s2">&quot;Shows and downloads the amount of memes you want from the subreddit r/memes&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">action</span><span class="p">((</span><span class="nx">amount</span><span class="p">,</span> <span class="nx">cmd</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">status</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span> <span class="o">==</span> <span class="s2">&quot;top&quot;</span> <span class="o">||</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span> <span class="o">==</span> <span class="s2">&quot;new&quot;</span> <span class="o">||</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span> <span class="o">==</span> <span class="s2">&quot;rising&quot;</span> <span class="o">||</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span> <span class="o">==</span> <span class="s2">&quot;controversial&quot;</span><span class="p">)){</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Sorting by &quot;</span> <span class="o">+</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span><span class="p">)</span>
+      <span class="kd">var</span> <span class="nx">link</span> <span class="o">=</span> <span class="s1">&#39;https://www.reddit.com/r/memes/&#39;</span><span class="o">+</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">sort</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="o">+</span><span class="s1">&#39;/.json&#39;</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Sorting by top&quot;</span><span class="p">)</span>
+      <span class="kd">var</span> <span class="nx">link</span> <span class="o">=</span> <span class="s1">&#39;https://www.reddit.com/r/memes/top/.json&#39;</span>
+    <span class="p">}</span>
+    <span class="nx">https</span><span class="p">.</span><span class="nx">get</span><span class="p">((</span><span class="nx">link</span><span class="p">),</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">respuesta</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">respuesta</span> <span class="o">+=</span> <span class="nx">chunk</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>
+      <span class="p">})</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">status</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+        <span class="nx">clear</span><span class="p">()</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">figlet</span><span class="p">.</span><span class="nx">textSync</span><span class="p">(</span><span class="s1">&#39;HAHAHA&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">horizontalLayout</span><span class="o">:</span> <span class="s1">&#39;full&#39;</span> <span class="p">}))</span>
+        <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">amount</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">respuesta</span><span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;children&#39;</span><span class="p">][</span><span class="nx">i</span><span class="p">.</span><span class="nx">toString</span><span class="p">()][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;     &#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">respuesta</span><span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;children&#39;</span><span class="p">][</span><span class="nx">i</span><span class="p">.</span><span class="nx">toString</span><span class="p">()][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">])</span>
+        <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="nx">url</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">respuesta</span><span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;children&#39;</span><span class="p">][</span><span class="nx">i</span><span class="p">.</span><span class="nx">toString</span><span class="p">()][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
+          <span class="nx">dest</span><span class="o">:</span> <span class="s1">&#39;./&#39;</span>
+        <span class="p">}</span>
+        <span class="nx">download</span><span class="p">.</span><span class="nx">image</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">status</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+        <span class="nx">Console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;ERROR BUU :(&quot;</span><span class="p">)</span>
+        <span class="nx">Console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+      <span class="p">})</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+
+<span class="nx">program</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">);</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
