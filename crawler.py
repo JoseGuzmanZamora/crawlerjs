@@ -32,13 +32,11 @@ def menu():
                 print("Error, please enter a valid number. \n")
                 menu()
 
-
-
-#Imprimir el atibuto según el Token
-
 def getVars():
         cont = 0
-        cont2=0
+        cont2= 0
+        cont3 = 0
+        cont4 = 0
         print('\n ------------------- variables definidas por var --------------------\n')
         for i in code:
                 if i[1] == 'var':
@@ -51,9 +49,19 @@ def getVars():
                         print(code[cont2+2][1])
                 cont2 += 1
         print("\n")
-
-
-            
+        print('\n ------------------- constantes --------------------\n')
+        for k in code: 
+                if k[1] == 'const':
+                        print(code[cont3 + 2][1])
+                cont3 += 1
+        print("\n")
+        print('\n ------------------- class --------------------\n')
+        for l in code: 
+                if l[1] == 'class':
+                        print(code[cont4 + 2][1])
+                cont4 += 1
+        print("\n")
+          
 def functions():
         print('\n ------------------- Funciones --------------------\n')
         contador = 0
@@ -75,6 +83,20 @@ def functions():
                                         print("Parametro", valor)
                                         contador_aux += 1
                                         valor = code[contador + contador_aux][1]
+                elif y[1] == '=>':
+                    print("ES6 definition")
+                    valor = code[contador][1]
+                    contador_aux = 1
+                    while valor != "=":
+                        contador_aux += 1
+                        valor = code[contador - contador_aux][1]
+                    print("Name", code[contador - contador_aux - 2][1])
+                    valor = code[contador][1]
+                    contador_aux2 = 3
+                    while valor != "(":
+                        print("Parametro",code[contador - contador_aux2][1])
+                        contador_aux2 += 1
+                        valor = code[contador - contador_aux2][1]
                 contador += 1
 
 

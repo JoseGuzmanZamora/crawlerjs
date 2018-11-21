@@ -2,13 +2,14 @@ class User {
 
   constructor(name) {
     this.name = name;
+    const mula = "sos";
   }
+
 
   sayHi() {
     alert(this.name);
   }
 
-  
 
 }
 
@@ -28,7 +29,7 @@ function cargaImagen(input) {
   }
 }
 
-function agregarPregunta() {
+function agregarPregunta(hola) {
   bloquear();
 
   var nombre = $("#txtPregunta").val();
@@ -81,6 +82,11 @@ function agregarPregunta() {
     resp.respuesta = $("#txtRespM3").val();
     resp.correcta = $("#chkResp3").prop('checked') == true ? 1 : 0;
     respuesta.respuestas[2] = resp;
+
+    var hola = (x,adsfads,dsfa,iiii,afdf,y) => {
+      console.log("df;lakjdsflka")
+    }
+  
 
     //respuesta 4
     resp = new Object();
