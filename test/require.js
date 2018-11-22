@@ -1,5 +1,9 @@
 const myModule = require('./test');
-let val = myModule.hello(); // val is "Hello"   
+let val = myModule.hello(); // val is "Hello"  
+
+function tengoquesalir(q,w,e,r,t){
+    console.log("dfa");
+}
 
 const mymodules = require('./test2');
 let valu = mymodules.hellos(); // val is "Hellos"
@@ -31,8 +35,8 @@ for (let i = 0; i <= 2; i++) {
     }
     
     class ColorPoint extends Point {
-        constructor(x, y, color) {
-            super(x, y);
+        constructor(x,y,color) {
+            super(x,y);
             this.color = color;
         }
         toString() {
@@ -58,3 +62,10 @@ for (let i = 0; i <= 2; i++) {
     elementos.map(function hola(elemento){ 
         return elemento.length;
     });  // [8, 6, 7, 9]
+
+
+    export var hsola = 90;
+    
+    hola = (q,f,g,h) => {
+        var holass = 9;
+    }
