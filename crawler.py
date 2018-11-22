@@ -9,11 +9,15 @@ import pprint
 client = MongoClient()
 db = client['prueba_test']
 
+#INICIO
+print("********** JAVASCRIPT SOURCE CODE CRAWLER **********")
+print("Por favor, ingrese el nombre del archivo MAIN dentro de la carpeta src:")
+archivoyes = input(">>")
 #EL ROLLO DE LEXING ARCHIVO BASE
-lexer = JavascriptLexer()
-filepath = './test/require.js'
+filepath = './src/'+ archivoyes +'.js'
 fp = open(filepath).read()
 #CODE INSERTION
+lexer = JavascriptLexer()
 tokens = lex(fp, lexer)
 code = []
 for x in tokens:
@@ -178,7 +182,7 @@ def recorrer(codigo):
                 if i[1] == 'require':
                         total.append(codigo[contador + 2][1])
                         path_modificado = codigo[contador + 2][1][1:-1]
-                        nombres.append('./test/' + path_modificado + '.js')
+                        nombres.append('./src/' + path_modificado + '.js')
                 contador += 1
                 for x in nombres:
                     filepath2 = x
@@ -193,9 +197,10 @@ def recorrer(codigo):
                     recorrido.append(x)         
 
 def indexado_general(coleccion):
+    print("CAMINO EN EL ÁRBOL")
     for e in total:
-        print(e[3:-1].upper())
-        filepath = './test/'+ e[3:-1] + '.js'
+        print(e[3:-1].upper(), "->")
+        filepath = './src/'+ e[3:-1] + '.js'
         archivo = open(filepath).read()
         tokens = lex(archivo, lexer)
         source = []
@@ -205,9 +210,8 @@ def indexado_general(coleccion):
 
 
 #MAIN
-colleccion_inicio = db['inicio']
+colleccion_inicio = db['general']
 #print(code)
 recorrer(code)
 indexing(code, colleccion_inicio, filepath)
 indexado_general(colleccion_inicio)
-print(db.list_collection_names())
